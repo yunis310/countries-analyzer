@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import TableHeader from './TableHeader';
+import TableBody from './TableBody';
 
 interface Country {
     name: {
         common: string;
+        official: string;
     };
     population: number;
     continents: string[];
@@ -29,17 +31,17 @@ const TableWrapper = ({ countries }: Props) => {
         'region',
         'area',
         'flag',
-        'size',
     ];
 
-    const [visibleColumns, setVisibleColumns] = useState<string[]>(heads);
+    const [visibleHeads, setVisibleHeads] = useState<string[]>(heads);
     const [sortKey, setSortKey] = useState<string>('country');
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
     return (
         <div>
             <table>
-                <TableHeader heads={heads} />
+                <TableHeader heads={visibleHeads} />
+                <TableBody countries={countries} visibleHeads={visibleHeads} />
             </table>
         </div>
     );

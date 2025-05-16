@@ -7,9 +7,7 @@ const TableHeader = ({ heads }: Props) => {
         <thead>
             <tr>
                 {heads.map((head) => (
-                    <th key={head}>
-                        {head.toUpperCase()} {head === 'asc' ? '▲' : '▼'}
-                    </th>
+                    <th key={head}>{head.toUpperCase()}</th>
                 ))}
             </tr>
         </thead>

@@ -17,7 +17,7 @@ function App() {
         fetchCountries();
     }, [dispatch]);
 
-    console.log(countries[1]);
+    console.log(countries);
 
     return (
         <div>
