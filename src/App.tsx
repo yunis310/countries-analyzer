@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCountries } from './api/store';
+import TableWrapper from './components/TableWrapper';
 
 function App() {
     const dispatch = useDispatch();
@@ -21,11 +22,7 @@ function App() {
     return (
         <div>
             <h1>Countries</h1>
-            <ul>
-                {countries.map((country: any, index: number) => (
-                    <li key={index}>{country.name.common}</li>
-                ))}
-            </ul>
+            <TableWrapper countries={countries} />
         </div>
     );
 }
