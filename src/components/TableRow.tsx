@@ -1,3 +1,6 @@
+import { useState } from 'react';
+import DetailPr from './DetailPr';
+
 interface Country {
     name: { common: string; official: string };
     population: number;
@@ -16,46 +19,63 @@ interface Props {
 }
 
 const TableRow = ({ country, visibleHeads, onCheck, checked }: Props) => {
-    return (
-        <tr>
-            {visibleHeads.includes('country') && (
-                <td>
-                    <input
-                        type="checkbox"
-                        checked={checked}
-                        onChange={() => onCheck(country.name.common)}
-                    />
-                    {`${country.name.official} (${country.name.common})`}
-                </td>
-            )}
-            {visibleHeads.includes('population') && (
-                <td>{country.population.toLocaleString()}</td>
-            )}
-            {visibleHeads.includes('continents') && (
-                <td>{country.continents.join(', ')}</td>
-            )}
-            {visibleHeads.includes('languages') && (
-                <td>
-                    {country.languages
-                        ? Object.values(country.languages).join(', ')
-                        : 'N/A'}
-                </td>
-            )}
+    const [showDetails, setShowDetails] = useState(false);
 
-            {visibleHeads.includes('region') && <td>{country.region}</td>}
-            {visibleHeads.includes('area') && (
-                <td>{country.area.toLocaleString()}</td>
+    const handleToggle = () => {
+        setShowDetails(!showDetails);
+    };
+    return (
+        <>
+            <tr>
+                {visibleHeads.includes('country') && (
+                    <td>
+                        <input
+                            type="checkbox"
+                            checked={checked}
+                            onChange={() => onCheck(country.name.common)}
+                        />
+                        {`${country.name.official} (${country.name.common})`}
+                        <button onClick={handleToggle}>
+                            {showDetails ? '▲' : '▼'}
+                        </button>
+                    </td>
+                )}
+                {visibleHeads.includes('population') && (
+                    <td>{country.population.toLocaleString()}</td>
+                )}
+                {visibleHeads.includes('continents') && (
+                    <td>{country.continents.join(', ')}</td>
+                )}
+                {visibleHeads.includes('languages') && (
+                    <td>
+                        {country.languages
+                            ? Object.values(country.languages).join(', ')
+                            : 'N/A'}
+                    </td>
+                )}
+
+                {visibleHeads.includes('region') && <td>{country.region}</td>}
+                {visibleHeads.includes('area') && (
+                    <td>{country.area.toLocaleString()}</td>
+                )}
+                {visibleHeads.includes('flag') && (
+                    <td>
+                        <img
+                            src={country.flags.svg}
+                            alt={country.name.common}
+                            width="40"
+                        />
+                    </td>
+                )}
+            </tr>
+            {showDetails && (
+                <tr>
+                    <td colSpan={4}>
+                        <DetailPr country={country} />
+                    </td>
+                </tr>
             )}
-            {visibleHeads.includes('flag') && (
-                <td>
-                    <img
-                        src={country.flags.svg}
-                        alt={country.name.common}
-                        width="40"
-                    />
-                </td>
-            )}
-        </tr>
+        </>
     );
 };
 

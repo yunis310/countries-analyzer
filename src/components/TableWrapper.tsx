@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import TableHeader from './TableHeader';
 import TableBody from './TableBody';
+import SearchBar from './SearchBar';
 
 interface Country {
     name: {
@@ -38,9 +39,15 @@ const TableWrapper = ({ countries }: Props) => {
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
     const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
     const [isComparing, setIsComparing] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
+
     const displayCountries = isComparing
         ? countries.filter((c) => selectedCountries.includes(c.name.common))
         : countries;
+    const filteredCountries = displayCountries.filter((country) => {
+        const name = country.name.official.toLowerCase();
+        return name.includes(searchTerm.toLowerCase());
+    });
 
     function getValue(country: Country, key: string) {
         switch (key) {
@@ -60,7 +67,7 @@ const TableWrapper = ({ countries }: Props) => {
                 return '';
         }
     }
-    const sortedCountries = [...displayCountries].sort((a, b) => {
+    const sortedCountries = [...filteredCountries].sort((a, b) => {
         const aValue = getValue(a, sortKey);
         const bValue = getValue(b, sortKey);
 
@@ -94,11 +101,11 @@ const TableWrapper = ({ countries }: Props) => {
         );
     };
 
-    console.log(visibleHeads);
-
     return (
         <div>
-            <div style={{ marginBottom: '1rem' }}>
+            <div>
+                <SearchBar searchTerm={searchTerm} onChange={setSearchTerm} />
+
                 {selectedCountries.length >= 2 && !isComparing && (
                     <button onClick={() => setIsComparing(true)}>
                         Compare Selected ({selectedCountries.length})
