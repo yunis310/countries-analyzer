@@ -1,4 +1,5 @@
 // detailPr type needs be updated
+// update fetching data
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCountries } from './api/store';

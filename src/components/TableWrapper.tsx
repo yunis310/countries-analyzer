@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TableHeader from './TableHeader';
 import TableBody from './TableBody';
 import SearchBar from './SearchBar';
+import Pagination from './Pagination';
 
 interface Country {
     name: {
@@ -40,6 +41,11 @@ const TableWrapper = ({ countries }: Props) => {
     const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
     const [isComparing, setIsComparing] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchTerm, isComparing]);
 
     const displayCountries = isComparing
         ? countries.filter((c) => selectedCountries.includes(c.name.common))
@@ -100,6 +106,9 @@ const TableWrapper = ({ countries }: Props) => {
                 : [...prev, name]
         );
     };
+    const startIndex = (currentPage - 1) * rowsPerPage;
+    const endIndex = startIndex + rowsPerPage;
+    const paginatedCountries = sortedCountries.slice(startIndex, endIndex);
 
     return (
         <div>
@@ -123,6 +132,13 @@ const TableWrapper = ({ countries }: Props) => {
                     </button>
                 )}
             </div>
+            <Pagination
+                total={sortedCountries.length}
+                currentPage={currentPage}
+                rowsPerPage={rowsPerPage}
+                onPageChange={setCurrentPage}
+                onRowsPerPageChange={setRowsPerPage}
+            />
             <table>
                 <TableHeader
                     heads={visibleHeads}
@@ -134,7 +150,7 @@ const TableWrapper = ({ countries }: Props) => {
                     onAddHead={handleAddHead}
                 />
                 <TableBody
-                    countries={sortedCountries}
+                    countries={paginatedCountries}
                     visibleHeads={visibleHeads}
                     selected={selectedCountries}
                     onCheck={toggleCountry}
