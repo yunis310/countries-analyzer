@@ -6,19 +6,27 @@ interface Country {
     region: string;
     area: number;
     flags: { svg: string };
-    size?: number;
 }
 
 interface Props {
     country: Country;
     visibleHeads: string[];
+    checked: boolean;
+    onCheck: (countryName: string) => void;
 }
 
-const TableRow = ({ country, visibleHeads }: Props) => {
+const TableRow = ({ country, visibleHeads, onCheck, checked }: Props) => {
     return (
         <tr>
             {visibleHeads.includes('country') && (
-                <td>{`${country.name.official} (${country.name.common})`}</td>
+                <td>
+                    <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={() => onCheck(country.name.common)}
+                    />
+                    {`${country.name.official} (${country.name.common})`}
+                </td>
             )}
             {visibleHeads.includes('population') && (
                 <td>{country.population.toLocaleString()}</td>

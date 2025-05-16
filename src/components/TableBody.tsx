@@ -13,9 +13,11 @@ interface Country {
 interface Props {
     countries: Country[];
     visibleHeads: string[];
+    selected: string[];
+    onCheck: (name: string) => void;
 }
 
-const TableBody = ({ countries, visibleHeads }: Props) => {
+const TableBody = ({ countries, visibleHeads, selected, onCheck }: Props) => {
     return (
         <tbody>
             {countries.map((country, idx) => (
@@ -23,6 +25,8 @@ const TableBody = ({ countries, visibleHeads }: Props) => {
                     key={idx}
                     country={country}
                     visibleHeads={visibleHeads}
+                    checked={selected.includes(country.name.common)}
+                    onCheck={onCheck}
                 />
             ))}
         </tbody>

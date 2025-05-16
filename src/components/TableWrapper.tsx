@@ -36,9 +36,13 @@ const TableWrapper = ({ countries }: Props) => {
     const [visibleHeads, setVisibleHeads] = useState<string[]>(heads);
     const [sortKey, setSortKey] = useState<string>('country');
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+    const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
+    const [isComparing, setIsComparing] = useState(false);
+    const displayCountries = isComparing
+        ? countries.filter((c) => selectedCountries.includes(c.name.common))
+        : countries;
 
     function getValue(country: Country, key: string) {
-        console.log(country, ': Country', key, ': string');
         switch (key) {
             case 'country':
                 return country.name.official;
@@ -56,7 +60,7 @@ const TableWrapper = ({ countries }: Props) => {
                 return '';
         }
     }
-    const sortedCountries = [...countries].sort((a, b) => {
+    const sortedCountries = [...displayCountries].sort((a, b) => {
         const aValue = getValue(a, sortKey);
         const bValue = getValue(b, sortKey);
 
@@ -73,19 +77,60 @@ const TableWrapper = ({ countries }: Props) => {
             setSortOrder('asc');
         }
     };
+    const handleRemoveHead = (head: string) => {
+        setVisibleHeads((prev) => prev.filter((h) => h !== head));
+    };
+    const handleAddHead = (head: string) => {
+        setVisibleHeads((prev) => {
+            const next = [...prev, head];
+            return heads.filter((h) => next.includes(h));
+        });
+    };
+    const toggleCountry = (name: string) => {
+        setSelectedCountries((prev) =>
+            prev.includes(name)
+                ? prev.filter((n) => n !== name)
+                : [...prev, name]
+        );
+    };
+
+    console.log(visibleHeads);
 
     return (
         <div>
+            <div style={{ marginBottom: '1rem' }}>
+                {selectedCountries.length >= 2 && !isComparing && (
+                    <button onClick={() => setIsComparing(true)}>
+                        Compare Selected ({selectedCountries.length})
+                    </button>
+                )}
+
+                {isComparing && (
+                    <button
+                        onClick={() => {
+                            setIsComparing(false);
+                            setSelectedCountries([]);
+                        }}
+                    >
+                        Cancel Comparison
+                    </button>
+                )}
+            </div>
             <table>
                 <TableHeader
                     heads={visibleHeads}
+                    allHeads={heads}
                     sortKey={sortKey}
                     sortOrder={sortOrder}
                     onSort={handelSorting}
+                    onRemoveHead={handleRemoveHead}
+                    onAddHead={handleAddHead}
                 />
                 <TableBody
                     countries={sortedCountries}
                     visibleHeads={visibleHeads}
+                    selected={selectedCountries}
+                    onCheck={toggleCountry}
                 />
             </table>
         </div>
