@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import TableHeader from './TableHeader';
 import TableBody from './TableBody';
-import SearchBar from './SearchBar';
+import SearchBar from '../SearchBar';
 import Pagination from './Pagination';
-import { Country } from '../store/countriesSlice';
+import { Country } from '../../store/countriesSlice';
+import CompareButton from '../CompareButton';
 
 interface Props {
     countries: Country[];
@@ -101,22 +102,15 @@ const TableWrapper = ({ countries }: Props) => {
             <div>
                 <SearchBar searchTerm={searchTerm} onChange={setSearchTerm} />
 
-                {selectedCountries.length >= 2 && !isComparing && (
-                    <button onClick={() => setIsComparing(true)}>
-                        Compare Selected ({selectedCountries.length})
-                    </button>
-                )}
-
-                {isComparing && (
-                    <button
-                        onClick={() => {
-                            setIsComparing(false);
-                            setSelectedCountries([]);
-                        }}
-                    >
-                        Cancel Comparison
-                    </button>
-                )}
+                <CompareButton
+                    isComparing={isComparing}
+                    selectedCount={selectedCountries.length}
+                    onCompare={() => setIsComparing(true)}
+                    onCancel={() => {
+                        setIsComparing(false);
+                        setSelectedCountries([]);
+                    }}
+                />
             </div>
             <Pagination
                 total={sortedCountries.length}

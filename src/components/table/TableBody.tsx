@@ -1,5 +1,5 @@
 import TableRow from './TableRow';
-import { Country } from '../store/countriesSlice';
+import { Country } from '../../store/countriesSlice';
 interface Props {
     countries: Country[];
     visibleHeads: string[];

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import TableWrapper from './components/TableWrapper';
+import TableWrapper from './components/table/TableWrapper';
 import { fetchCountries } from './store/countriesSlice';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 

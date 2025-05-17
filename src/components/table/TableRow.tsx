@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import DetailPr from './DetailPr';
-import { Country } from '../store/countriesSlice';
+import DetailPr from '../DetailPr';
+import { Country } from '../../store/countriesSlice';
 
 interface Props {
     country: Country;
