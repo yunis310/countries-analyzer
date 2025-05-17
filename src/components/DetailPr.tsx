@@ -1,7 +1,8 @@
 import React from 'react';
+import { Country } from '../store/countriesSlice';
 
 interface Props {
-    country: any; // for now
+    country: Country;
 }
 
 const DetailPr: React.FC<Props> = ({ country }) => {
@@ -53,7 +54,7 @@ const DetailPr: React.FC<Props> = ({ country }) => {
                 top-level domain is <strong>{tld?.[0]}</strong>.
             </p>
             <a
-                href={maps.googleMaps}
+                href={maps && maps.googleMaps}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-600 underline inline-block"

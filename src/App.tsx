@@ -1,23 +1,22 @@
-// detailPr type needs be updated
-// update fetching data
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { setCountries } from './api/store';
+import { useEffect } from 'react';
 import TableWrapper from './components/TableWrapper';
+import { fetchCountries } from './store/countriesSlice';
+import { useAppDispatch, useAppSelector } from './store/hooks';
 
 function App() {
-    const dispatch = useDispatch();
-    const countries = useSelector((state: any) => state.countries.countries);
+    const dispatch = useAppDispatch();
+    const {
+        data: countries,
+        loading,
+        error,
+    } = useAppSelector((state) => state.countries);
 
     useEffect(() => {
-        const fetchCountries = async () => {
-            const response = await fetch('https://restcountries.com/v3.1/all');
-            const data = await response.json();
-            dispatch(setCountries(data));
-        };
-
-        fetchCountries();
+        dispatch(fetchCountries());
     }, [dispatch]);
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error: {error}</p>;
 
     return (
         <div>

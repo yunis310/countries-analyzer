@@ -3,22 +3,7 @@ import TableHeader from './TableHeader';
 import TableBody from './TableBody';
 import SearchBar from './SearchBar';
 import Pagination from './Pagination';
-
-interface Country {
-    name: {
-        common: string;
-        official: string;
-    };
-    population: number;
-    continents: string[];
-    languages: { [key: string]: string };
-    region: string;
-    area: number;
-    flags: {
-        svg: string;
-    };
-    size?: number;
-}
+import { Country } from '../store/countriesSlice';
 
 interface Props {
     countries: Country[];
@@ -43,6 +28,7 @@ const TableWrapper = ({ countries }: Props) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+
     useEffect(() => {
         setCurrentPage(1);
     }, [searchTerm, isComparing]);
@@ -58,17 +44,17 @@ const TableWrapper = ({ countries }: Props) => {
     function getValue(country: Country, key: string) {
         switch (key) {
             case 'country':
-                return country.name.official;
+                return country.name.official || '';
             case 'population':
-                return country.population;
+                return country.population || 0;
             case 'region':
-                return country.region;
+                return country.region || '';
             case 'languages':
-                return country.languages;
+                return country.languages || '';
             case 'continents':
-                return country.continents;
+                return country.continents || '';
             case 'area':
-                return country.area;
+                return country.area || 0;
             default:
                 return '';
         }

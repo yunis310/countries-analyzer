@@ -1,15 +1,6 @@
 import { useState } from 'react';
 import DetailPr from './DetailPr';
-
-interface Country {
-    name: { common: string; official: string };
-    population: number;
-    continents: string[];
-    languages: { [key: string]: string };
-    region: string;
-    area: number;
-    flags: { svg: string };
-}
+import { Country } from '../store/countriesSlice';
 
 interface Props {
     country: Country;
@@ -44,7 +35,9 @@ const TableRow = ({ country, visibleHeads, onCheck, checked }: Props) => {
                     <td>{country.population.toLocaleString()}</td>
                 )}
                 {visibleHeads.includes('continents') && (
-                    <td>{country.continents.join(', ')}</td>
+                    <td>
+                        {country.continents && country.continents.join(', ')}
+                    </td>
                 )}
                 {visibleHeads.includes('languages') && (
                     <td>
@@ -71,7 +64,7 @@ const TableRow = ({ country, visibleHeads, onCheck, checked }: Props) => {
             {showDetails && (
                 <tr>
                     <td colSpan={4}>
-                        <DetailPr country={country} />
+                        {country && <DetailPr country={country} />}
                     </td>
                 </tr>
             )}
