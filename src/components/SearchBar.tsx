@@ -7,7 +7,7 @@ interface Props {
 
 const SearchBar: React.FC<Props> = ({ searchTerm, onChange }) => {
     return (
-        <div>
+        <div className="search-bar">
             <input
                 type="text"
                 placeholder="Search by country name..."

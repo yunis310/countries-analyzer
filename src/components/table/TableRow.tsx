@@ -11,33 +11,45 @@ interface Props {
 
 const TableRow = ({ country, visibleHeads, onCheck, checked }: Props) => {
     const [showDetails, setShowDetails] = useState(false);
+    const formatPopulation = (num: number): string => {
+        if (num >= 1_000_000_000) return (num / 1_000_000_000).toFixed(1) + 'B';
+        if (num >= 1_000_000) return (num / 1_000_000).toFixed(1) + 'M';
+        if (num >= 1_000) return (num / 1_000).toFixed(1) + 'K';
+        return num.toString();
+    };
 
     const handleToggle = () => {
-        setShowDetails(!showDetails);
+        setShowDetails((prev) => !prev);
     };
+
+    const colSpan = visibleHeads.length;
+
     return (
         <>
-            <tr>
+            <tr className={showDetails ? 'expanded-row' : ''}>
                 {visibleHeads.includes('country') && (
                     <td>
-                        <input
-                            type="checkbox"
-                            checked={checked}
-                            onChange={() => onCheck(country.name.common)}
-                        />
-                        {`${country.name.official} (${country.name.common})`}
-                        <button onClick={handleToggle}>
-                            {showDetails ? '▲' : '▼'}
-                        </button>
+                        <label className="table-row-label">
+                            <input
+                                type="checkbox"
+                                checked={checked}
+                                onChange={() => onCheck(country.name.common)}
+                            />
+                            <span>{`${country.name.common}`}</span>
+                            <button
+                                onClick={handleToggle}
+                                className="expand-btn"
+                            >
+                                {showDetails ? '▲' : '▼'}
+                            </button>
+                        </label>
                     </td>
                 )}
                 {visibleHeads.includes('population') && (
-                    <td>{country.population.toLocaleString()}</td>
+                    <td>{formatPopulation(country.population)}</td>
                 )}
                 {visibleHeads.includes('continents') && (
-                    <td>
-                        {country.continents && country.continents.join(', ')}
-                    </td>
+                    <td>{country.continents?.join(', ')}</td>
                 )}
                 {visibleHeads.includes('languages') && (
                     <td>
@@ -46,14 +58,14 @@ const TableRow = ({ country, visibleHeads, onCheck, checked }: Props) => {
                             : 'N/A'}
                     </td>
                 )}
-
                 {visibleHeads.includes('region') && <td>{country.region}</td>}
-                {visibleHeads.includes('area') && (
-                    <td>{country.area.toLocaleString()}</td>
+                {visibleHeads.includes('Size (km²)') && (
+                    <td>{formatPopulation(country.area)}</td>
                 )}
                 {visibleHeads.includes('flag') && (
                     <td>
                         <img
+                            className="flag-img"
                             src={country.flags.svg}
                             alt={country.name.common}
                             width="40"
@@ -62,9 +74,9 @@ const TableRow = ({ country, visibleHeads, onCheck, checked }: Props) => {
                 )}
             </tr>
             {showDetails && (
-                <tr>
-                    <td colSpan={4}>
-                        {country && <DetailPr country={country} />}
+                <tr className="detail-row">
+                    <td colSpan={colSpan}>
+                        <DetailPr country={country} />
                     </td>
                 </tr>
             )}

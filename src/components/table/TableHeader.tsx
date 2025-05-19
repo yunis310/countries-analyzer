@@ -1,3 +1,5 @@
+import React, { useState } from 'react';
+
 interface Props {
     heads: string[];
     allHeads: string[];
@@ -5,9 +7,9 @@ interface Props {
     sortOrder: 'asc' | 'desc';
     onRemoveHead: (key: string) => void;
     onAddHead: (key: string) => void;
-
     onSort: (key: string) => void;
 }
+
 const TableHeader = ({
     heads,
     allHeads,
@@ -18,42 +20,65 @@ const TableHeader = ({
     onAddHead,
 }: Props) => {
     const hiddenHeads = allHeads.filter((col) => !heads.includes(col));
+    const [selectedHead, setSelectedHead] = useState('');
+
+    const handleAdd = () => {
+        if (selectedHead) {
+            onAddHead(selectedHead);
+            setSelectedHead('');
+        }
+    };
 
     return (
         <thead>
             <tr>
-                {heads.map((head) => (
-                    <th
-                        key={head}
-                        onClick={() =>
-                            head !== 'flag' &&
-                            head !== 'languages' &&
-                            onSort(head)
-                        }
-                    >
-                        {head.toUpperCase()}{' '}
-                        {head === sortKey && (sortOrder === 'asc' ? '▲' : '▼')}
-                        {head !== 'country' && (
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    onRemoveHead(head);
-                                }}
-                            >
-                                ✕
-                            </button>
-                        )}
-                    </th>
-                ))}
+                {heads.map((head) => {
+                    const isSortable = head !== 'flag' && head !== 'languages';
+                    return (
+                        <th
+                            key={head}
+                            onClick={() => isSortable && onSort(head)}
+                            className={isSortable ? 'sortable' : ''}
+                        >
+                            {head.toUpperCase()}
+                            {head === sortKey && (
+                                <span className="sort-icon">
+                                    {sortOrder === 'asc' ? '▲' : '▼'}
+                                </span>
+                            )}
+                            {head !== 'country' && (
+                                <button
+                                    className="remove-btn"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onRemoveHead(head);
+                                    }}
+                                >
+                                    ✕
+                                </button>
+                            )}
+                        </th>
+                    );
+                })}
                 {hiddenHeads.length > 0 && (
                     <th>
-                        <button
-                            onClick={() => {
-                                const next = hiddenHeads[0];
-                                if (next) onAddHead(next);
-                            }}
+                        <select
+                            value={selectedHead}
+                            onChange={(e) => setSelectedHead(e.target.value)}
                         >
-                            + Add
+                            <option value="">+ Add Column</option>
+                            {hiddenHeads.map((h) => (
+                                <option key={h} value={h}>
+                                    {h.toUpperCase()}
+                                </option>
+                            ))}
+                        </select>
+                        <button
+                            className="add-btn"
+                            onClick={handleAdd}
+                            disabled={!selectedHead}
+                        >
+                            Add
                         </button>
                     </th>
                 )}

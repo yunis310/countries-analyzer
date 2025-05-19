@@ -26,42 +26,42 @@ const DetailPr: React.FC<Props> = ({ country }) => {
     const languageList = languages
         ? Object.values(languages).join(', ')
         : 'N/A';
+
     const currencyList = currencies
         ? Object.values(currencies)
-              .map((c) => {
-                  const currency = c as { name: string; symbol: string };
-                  return `${currency.name} (${currency.symbol})`;
-              })
+              .map((c) => `${c.name} (${c.symbol})`)
               .join(', ')
         : 'N/A';
 
     return (
-        <>
+        <div className="country-detail">
             <p>
-                <strong>{name.common}</strong>, officially known as the{' '}
-                <em>{name.official}</em>, is a country in the region of{' '}
-                <strong>{region}</strong>, specifically{' '}
-                <strong>{subregion}</strong>. Its capital is{' '}
-                <strong>{capital?.[0]}</strong>, and it has a population of
-                approximately <strong>{population.toLocaleString()}</strong>.
+                <strong>{name.common}</strong>, officially known as{' '}
+                <em>{name.official}</em>, is located in{' '}
+                <strong>{region}</strong> ({subregion || 'Unknown'}). The
+                capital is <strong>{capital?.[0] || 'N/A'}</strong>, with a
+                population of about{' '}
+                <strong>{population.toLocaleString()}</strong>.
             </p>
             <p>
-                The official language is <strong>{languageList}</strong>, and
-                the currency used is <strong>{currencyList}</strong>. It is{' '}
-                {landlocked ? 'landlocked' : 'not landlocked'} and operates in
-                the <strong>{timezones?.[0]}</strong> timezone. It{' '}
-                {unMember ? 'is' : 'is not'} a member of the United Nations. Its
-                top-level domain is <strong>{tld?.[0]}</strong>.
+                Languages spoken include <strong>{languageList}</strong>. The
+                currency is <strong>{currencyList}</strong>. This country is{' '}
+                <strong>{landlocked ? 'landlocked' : 'not landlocked'}</strong>{' '}
+                and follows <strong>{timezones?.[0] || 'N/A'}</strong> time. It{' '}
+                <strong>{unMember ? 'is' : 'is not'}</strong> a UN member.
+                Top-level domain: <strong>{tld?.[0] || 'N/A'}</strong>.
             </p>
-            <a
-                href={maps && maps.googleMaps}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 underline inline-block"
-            >
-                📍 View on Google Maps
-            </a>
-        </>
+            {maps?.googleMaps && (
+                <a
+                    href={maps.googleMaps}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="google-map-link"
+                >
+                    📍 View on Google Maps
+                </a>
+            )}
+        </div>
     );
 };
 

@@ -17,7 +17,7 @@ const TableWrapper = ({ countries }: Props) => {
         'continents',
         'languages',
         'region',
-        'area',
+        'Size (km²)',
         'flag',
     ];
 
@@ -54,7 +54,7 @@ const TableWrapper = ({ countries }: Props) => {
                 return country.languages || '';
             case 'continents':
                 return country.continents || '';
-            case 'area':
+            case 'Size (km²)':
                 return country.area || 0;
             default:
                 return '';
@@ -98,10 +98,9 @@ const TableWrapper = ({ countries }: Props) => {
     const paginatedCountries = sortedCountries.slice(startIndex, endIndex);
 
     return (
-        <div>
+        <div className="table-wrapper">
             <div>
                 <SearchBar searchTerm={searchTerm} onChange={setSearchTerm} />
-
                 <CompareButton
                     isComparing={isComparing}
                     selectedCount={selectedCountries.length}

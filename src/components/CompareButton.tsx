@@ -17,7 +17,7 @@ const CompareButton = ({
 
     if (selectedCount >= 2) {
         return (
-            <button onClick={onCompare}>
+            <button className="compare-button" onClick={onCompare}>
                 Compare Selected ({selectedCount})
             </button>
         );
